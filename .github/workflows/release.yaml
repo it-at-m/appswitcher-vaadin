@@ -39,7 +39,7 @@ jobs:
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
           -Dtag=${{ github.event.inputs.release-tag }} 
-          -Darguments="-DskipTests"
+          -Darguments="-DskipTests -ntp"
 
   perform-release:
     needs: prepare-release

@@ -49,20 +49,24 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.release-tag }}
-      - name: Set up JDK 17
+      - name: Set up JDK 17 and OSSRH auth / GPG signing
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: "temurin"
           cache: "maven"
           server-id: "ossrh"
-          server-username: ${{ secrets.nexus_username }}
-          server-password: ${{ secrets.nexus_password }}
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_PASSWORD
           gpg-private-key: ${{ secrets.gpg_private_key }}
-          gpg-passphrase: ${{ secrets.gpg_passphrase }}
+          gpg-passphrase: SIGN_KEY_PASS
       - name: Build with Maven
         run: >
           mvn -B -ntp -P directory,sign -DskipTests deploy
+        env:
+          SIGN_KEY_PASS: ${{ secrets.gpg_passphrase }}
+          OSSRH_USERNAME: ${{ secrets.nexus_username }}
+          OSSRH_PASSWORD: ${{ secrets.nexus_password }}
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1

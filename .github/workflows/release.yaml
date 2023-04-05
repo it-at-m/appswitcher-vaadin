@@ -57,7 +57,7 @@ jobs:
           cache: "maven"
       - name: Build with Maven
         run: >
-          mvn -B -ntp -P directory,sign verify
+          mvn -B -ntp -P directory,sign -DskipTests deploy
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1

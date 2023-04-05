@@ -28,9 +28,10 @@
 
 	<groupId>de.muenchen.oss.appswitcher</groupId>
 	<artifactId>appswitcher-vaadin</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>appswitcher-vaadin</name>
 	<description>Appswitcher for Vaadin</description>
+	<url>https://github.com/it-at-m/appswitcher-vaadin</url>
 
 	<properties>
 		<!-- Main Dependencies -->
@@ -41,10 +42,6 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<address.repository>http://spsp003.srv.muenchen.de/artifactory</address.repository>
-		<git.url>https://git.muenchen.de</git.url>
-
 	</properties>
 
 	<organization>
@@ -305,6 +302,18 @@
 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>3.3.0</version>
+						<configuration>
+							<!-- Generated file that shouldn't be included in add-ons -->
+							<excludes>
+								<exclude>META-INF/VAADIN/config/flow-build-info.json</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-assembly-plugin</artifactId>
 						<version>3.5.0</version>
 						<configuration>
@@ -318,20 +327,9 @@
 								<goals>
 									<goal>single</goal>
 								</goals>
-								<phase>install</phase>
+								<phase>package</phase>
 							</execution>
 						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>3.3.0</version>
-						<configuration>
-							<!-- Generated file that shouldn't be included in add-ons -->
-							<excludes>
-								<exclude>META-INF/VAADIN/config/flow-build-info.json</exclude>
-							</excludes>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

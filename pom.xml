@@ -28,7 +28,7 @@
 
 	<groupId>de.muenchen.oss.appswitcher</groupId>
 	<artifactId>appswitcher-vaadin</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>appswitcher-vaadin</name>
 	<description>Appswitcher for Vaadin</description>
 

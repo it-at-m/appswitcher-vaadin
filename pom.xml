@@ -28,7 +28,7 @@
 
 	<groupId>de.muenchen.oss.appswitcher</groupId>
 	<artifactId>appswitcher-vaadin</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>appswitcher-vaadin</name>
 	<description>Appswitcher for Vaadin</description>
 
@@ -87,7 +87,7 @@
 		<url>https://github.com/it-at-m/appswitcher-vaadin</url>
 		<connection>scm:git:https://github.com/it-at-m/appswitcher-vaadin.git</connection>
 		<developerConnection>scm:git:https://github.com/it-at-m/appswitcher-vaadin.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>v1.0.0</tag>
 	</scm>
 
 

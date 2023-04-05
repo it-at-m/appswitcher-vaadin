@@ -1,0 +1,6 @@
+.popup {
+    border-radius: 15px;
+    /* must be specified statically in css */
+    width: 315px;
+    height: 300px;
+}

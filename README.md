@@ -28,8 +28,8 @@ public class MyVaadinView extends Div {
     public MyVaadinView() {
         add(Appswitcher.builder("https://my-appswitcher-server.example.com")
         		// request tags according to your needs
-                .tags("global", "finance")
-                .build());
+            .tags("global", "finance")
+            .build());
     }
 }
 ```
@@ -40,7 +40,7 @@ public class MyVaadinView extends Div {
 
 * Appswitcher.java: this is the addon-on component class. You can add more classes if you wish, including other Components.
 * TestView.java: A View class that let's you test the component you are building. This and other classes in the test folder will not be packaged during the build. You can add more test view classes in this package.
-* assembly/: this folder includes configuration for packaging the project into a JAR so that it works well with other Vaadin projects and the Vaadin Directory. There is usually no need to modify these files, unless you need to add JAR manifest entries.
+* src/main/assembly/: this folder includes configuration for packaging the project into a JAR so that it works well with other Vaadin projects and the Vaadin Directory. There is usually no need to modify these files, unless you need to add JAR manifest entries.
 
 
 ### Deployment

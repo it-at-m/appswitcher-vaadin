@@ -21,3 +21,6 @@ webpack.generated.js
 
 # Node install
 node/
+
+## local .npmrc
+.npmrc

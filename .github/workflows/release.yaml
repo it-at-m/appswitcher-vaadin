@@ -1,0 +1,70 @@
+name: release
+
+# Run workflow on commits to the `main` branch
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to release from ?"
+        required: true
+        default: "main"
+      release-version:
+        description: "Release version ?"
+        required: true
+      release-tag:
+        description: "Release tag ?"
+        required: true
+      development-version:
+        description: "Development version ?"
+        required: true
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      - name: Setup git user
+        uses: fregante/setup-git-user@v2
+      - name: Install Java and Maven
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: "temurin"
+      - name: Perform maven release
+        run: >
+          mvn -B -ntp release:prepare 
+          -DreleaseVersion=${{ github.event.inputs.release-version }} 
+          -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
+          -Dtag=${{ github.event.inputs.release-tag }} 
+          -Darguments="-DskipTests"
+
+  perform-release:
+    needs: prepare-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout release tag
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.release-tag }}
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+      - name: Build with Maven
+        run: >
+          mvn -B -ntp -P directory,sign verify
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/*.jar
+          tag_name: ${{ github.event.inputs.release-tag }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true

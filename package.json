@@ -85,7 +85,7 @@
     "workbox-core": "7.0.0",
     "workbox-precaching": "7.0.0",
     "rollup-plugin-visualizer": "5.9.0",
-    "@vitejs/plugin-react": "4.0.0"
+    "@vitejs/plugin-react": "4.0.4"
   },
   "vaadin": {
     "dependencies": {

@@ -29,7 +29,7 @@ jobs:
       - name: Setup git user
         uses: fregante/setup-git-user@v2
       - name: Install Java and Maven
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: "temurin"
@@ -50,7 +50,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.release-tag }}
       - name: Set up JDK 17 and OSSRH auth / GPG signing
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"

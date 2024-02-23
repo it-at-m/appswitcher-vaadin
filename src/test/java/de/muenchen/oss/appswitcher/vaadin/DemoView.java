@@ -22,21 +22,22 @@
  */
 package de.muenchen.oss.appswitcher.vaadin;
 
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 /**
- * Test View for our {@link Appswitcher} add-on class. This class and others in the
- * test folder will not be included in the final JAR.
+ * Test View for our {@link Appswitcher} add-on class. This class and others in
+ * the test folder will not be included in the final JAR.
  */
 @Route("")
-public class TestView extends Div {
+public class DemoView extends VerticalLayout {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public TestView() {
-        add(Appswitcher.builder("https://rbs-appswitcher-coding.muenchen.de")
-                .tags("global", "rbs-kita")
-                .build());
-    }
+	public DemoView() {
+		add(new H1("appswitcher-vaadin Test View"));
+		add(Appswitcher.builder("https://csreis.github.io/tests/cross-site-iframe.html").tags("global", "rbs-kita")
+				.build());
+	}
 }

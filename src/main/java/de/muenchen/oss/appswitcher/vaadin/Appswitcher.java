@@ -93,7 +93,7 @@ public class Appswitcher extends Div {
         }
 
         /**
-         * 
+         *
          * @param component component which will trigger the popup containing the appswitcher-server
          *            iframe. Default: {@link Button} with
          *            {@link ButtonVariant#LUMO_TERTIARY} and Icon {@link VaadinIcon#GRID_SMALL}
@@ -114,7 +114,7 @@ public class Appswitcher extends Div {
         }
 
         /**
-         * 
+         *
          * @param componentId ID of component
          * @return the {@link Builder}
          */
@@ -126,7 +126,7 @@ public class Appswitcher extends Div {
         /**
          * Sets the size of the iframe. Should be strings that are understood by browsers (e.g.
          * '100%', '1.5em', '200px').
-         * 
+         *
          * @param width (default: "315px")
          * @param height (default: "300px")
          * @return the {@link Builder}

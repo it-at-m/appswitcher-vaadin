@@ -6,6 +6,10 @@ Provides a Vaadin Flow (24+) component (`Appswitcher`) to embed an `<iframe>` wi
 
 ## Usage
 
+### Available Versions
+
+See GitHub [Releases](https://github.com/it-at-m/appswitcher-vaadin/releases).
+
 ### Dependency (Maven)
 
 ```xml
@@ -36,18 +40,37 @@ public class MyVaadinView extends Div {
 
 ## Development
 
-### Important Files 
-
-* Appswitcher.java: this is the addon-on component class. You can add more classes if you wish, including other Components.
-* TestView.java: A View class that let's you test the component you are building. This and other classes in the test folder will not be packaged during the build. You can add more test view classes in this package.
-* src/main/assembly/: this folder includes configuration for packaging the project into a JAR so that it works well with other Vaadin projects and the Vaadin Directory. There is usually no need to modify these files, unless you need to add JAR manifest entries.
-
-
 ### Deployment
 
 Starting the test/demo server:
-```
+
+```bash
 mvn jetty:run
 ```
 
-This deploys demo at http://localhost:8080
+This deploys demo at <http://localhost:8080>
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please open an issue with the tag "enhancement", fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Open an issue with the tag "enhancement"
+2. Fork the Project
+3. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+4. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+5. Push to the Branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request
+
+We use [itm-java-codeformat](https://github.com/it-at-m/itm-java-codeformat), so please make sure to apply the correct code format for your contributions.
+
+
+## License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) file for more information.
+
+## Contact
+
+it@M - opensource@muenchen.de

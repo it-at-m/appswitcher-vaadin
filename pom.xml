@@ -45,7 +45,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<itm-codeformat.version>1.0.9</itm-codeformat.version>
+		<itm-codeformat.version>1.0.10</itm-codeformat.version>
 	</properties>
 
 	<organization>

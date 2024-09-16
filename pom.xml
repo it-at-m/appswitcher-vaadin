@@ -37,7 +37,7 @@
 
 	<properties>
 		<!-- Main Dependencies -->
-		<vaadin.version>24.4.11</vaadin.version>
+		<vaadin.version>24.4.12</vaadin.version>
 		<jetty.version>11.0.24</jetty.version>
 
 		<maven.compiler.source>17</maven.compiler.source>

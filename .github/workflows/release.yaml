@@ -19,7 +19,7 @@ on:
         required: true
 
 jobs:
-  prepare-release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
@@ -28,45 +28,31 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
       - name: Setup git user
         uses: fregante/setup-git-user@v2
-      - name: Install Java and Maven
+        
+      - name: Set up JDK 17 and central auth / GPG signing
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: "temurin"
+          cache: "maven"
+          server-id: "central"
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.gpg_private_key }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      
       - name: Perform maven release
         run: >
-          mvn -B -ntp release:prepare 
+          mvn -B -ntp release:prepare release:perform
           -DreleaseVersion=${{ github.event.inputs.release-version }} 
           -DdevelopmentVersion=${{ github.event.inputs.development-version }} 
           -Dtag=${{ github.event.inputs.release-tag }} 
-          -Darguments="-DskipTests"
-
-  perform-release:
-    needs: prepare-release
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout release tag
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.release-tag }}
-      - name: Set up JDK 17 and OSSRH auth / GPG signing
-        uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          cache: "maven"
-          server-id: "ossrh"
-          server-username: OSSRH_USERNAME
-          server-password: OSSRH_PASSWORD
-          gpg-private-key: ${{ secrets.gpg_private_key }}
-          gpg-passphrase: SIGN_KEY_PASS
-      - name: Build with Maven
-        run: >
-          mvn -B -ntp -P directory,sign -DskipTests deploy
+          -Darguments="-DskipTests -ntp"
         env:
-          SIGN_KEY_PASS: ${{ secrets.gpg_passphrase }}
-          OSSRH_USERNAME: ${{ secrets.nexus_username }}
-          OSSRH_PASSWORD: ${{ secrets.nexus_password }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
+          CENTRAL_USERNAME: ${{ secrets.sonatype_username }}
+          CENTRAL_PASSWORD: ${{ secrets.sonatype_password }}
+
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2

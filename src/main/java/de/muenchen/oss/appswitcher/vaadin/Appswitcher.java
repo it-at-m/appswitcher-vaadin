@@ -43,6 +43,7 @@ public class Appswitcher extends Div {
             String iframeId, String width, String height) {
         IFrame iframe = new IFrame(uriWithTags);
         iframe.setId(iframeId);
+        iframe.setName(iframeId);
         iframe.getElement().setAttribute("frameborder", "0");
         iframe.setWidth(width);
         iframe.setHeight(height);

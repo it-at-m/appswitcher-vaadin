@@ -25,7 +25,6 @@ package de.muenchen.oss.appswitcher.vaadin;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.vaadin.componentfactory.Popup;
 import com.vaadin.flow.component.ClickNotifier;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -34,23 +33,33 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.IFrame;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.popover.Popover;
+import com.vaadin.flow.component.popover.PopoverPosition;
 
 public class Appswitcher extends Div {
 
     private static final long serialVersionUID = 1L;
 
+    private IFrame frame;
+
     private <T extends Component & ClickNotifier<?>> Appswitcher(String uriWithTags, T component, String id,
             String iframeId, String width, String height) {
-        IFrame iframe = new IFrame(uriWithTags);
-        iframe.setId(iframeId);
-        iframe.getElement().setAttribute("frameborder", "0");
-        iframe.setWidth(width);
-        iframe.setHeight(height);
+        frame = new IFrame(uriWithTags);
+        frame.setId(iframeId);
+        frame.getElement().setAttribute("frameborder", "0");
+        frame.setWidth(width);
+        frame.setHeight(height);
 
-        Popup popup = new Popup();
-        popup.setFor(id);
-        popup.add(iframe);
-        this.add(component, popup);
+        Popover popover = new Popover();
+        popover.setTarget(component);
+        popover.setPosition(PopoverPosition.BOTTOM);
+
+        popover.add(frame);
+        this.add(component, popover);
+    }
+
+    public void setUrl(String url) {
+        frame.setSrc(url);
     }
 
     public static <T extends Component & ClickNotifier<?>> Builder<T> builder(String baseUrl) {
@@ -61,11 +70,11 @@ public class Appswitcher extends Div {
         private String baseUrl;
         private String[] tags = new String[] { "global" };
         private T comp;
-        private Icon icon = VaadinIcon.GRID_SMALL.create();
+        private Icon icon = VaadinIcon.GRID_BIG.create();
         private String iframeId = "appswitcher-iframe";
         private String componentId = "appswitcher-component";
         private String width = "315px";
-        private String heigth = "300px";
+        private String height = "300px";
 
         public Builder(String baseUrl) {
             if (baseUrl == null || baseUrl.isBlank()) {
@@ -133,7 +142,7 @@ public class Appswitcher extends Div {
          */
         public Builder<T> dimensions(String width, String height) {
             this.width = width;
-            this.heigth = height;
+            this.height = height;
             return this;
         }
 
@@ -149,7 +158,7 @@ public class Appswitcher extends Div {
                 this.comp = (T) b;
             }
             return new Appswitcher(getUrlWithTags(this.baseUrl, this.tags), this.comp, this.componentId,
-                    this.iframeId, this.width, this.heigth);
+                    this.iframeId, this.width, this.height);
         }
 
         private String getUrlWithTags(String baseUrl, String[] tags) {

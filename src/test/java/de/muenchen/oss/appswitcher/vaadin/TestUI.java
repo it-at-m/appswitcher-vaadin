@@ -45,7 +45,7 @@ public class TestUI extends VerticalLayout {
         baseUrlTextField.setLabel("Base URL");
         baseUrlTextField.setValue("https://rbs-appswitcher-coding.muenchen.de");
         baseUrlTextField.addValueChangeListener(e -> {
-           appswitcher.setUrl(e.getValue());
+            appswitcher.setUrl(e.getValue());
         });
 
         add(new H1("AppSwitcher"));

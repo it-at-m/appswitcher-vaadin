@@ -22,21 +22,13 @@
  */
 package de.muenchen.oss.appswitcher.vaadin;
 
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.router.Route;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Test View for our {@link Appswitcher} add-on class. This class and others in the
- * test folder will not be included in the final JAR.
- */
-@Route("")
-public class TestView extends Div {
+@SpringBootApplication
+public class TestServer {
 
-    private static final long serialVersionUID = 1L;
-
-    public TestView() {
-        add(Appswitcher.builder("https://rbs-appswitcher-coding.muenchen.de")
-                .tags("global", "rbs-kita")
-                .build());
+    public static void main(String[] args) {
+        SpringApplication.run(TestServer.class, args);
     }
 }

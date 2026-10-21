@@ -23,7 +23,8 @@
     THE SOFTWARE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.muenchen.oss.appswitcher</groupId>
@@ -34,14 +35,14 @@
 	<url>https://github.com/it-at-m/appswitcher-vaadin</url>
 
 	<properties>
-		<!-- Main Dependencies -->
+		<!-- The version used while developing/testing, update every once in a while -->
 		<vaadin.version>25.3.3</vaadin.version>
-		<jetty.version>11.0.26</jetty.version>
 
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>21</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+
+		<spring.boot.version>4.1.1</spring.boot.version>
 
 		<itm-codeformat.version>1.0.10</itm-codeformat.version>
 	</properties>
@@ -56,29 +57,30 @@
 			<dependency>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-bom</artifactId>
+				<version>${vaadin.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-				<version>${vaadin.version}</version>
+			</dependency>
+			<!-- The add-on itself does not depend on Spring Boot.
+				 This is to simplify testing setup only, to get compatible deps
+				 needed for testing/development. -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
-	<repositories>
-		<!-- Repository used by many Vaadin add-ons -->
-		<repository>
-			<id>Vaadin Directory</id>
-			<url>https://maven.vaadin.com/vaadin-addons</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 	<scm>
 		<url>https://github.com/it-at-m/appswitcher-vaadin</url>
 		<connection>scm:git:https://github.com/it-at-m/appswitcher-vaadin.git</connection>
 		<developerConnection>
-			scm:git:https://github.com/it-at-m/appswitcher-vaadin.git</developerConnection>
+			scm:git:https://github.com/it-at-m/appswitcher-vaadin.git
+		</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -87,27 +89,49 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-core</artifactId>
+			<!-- Provided scope is OKish, we can expect all apps bring in Vaadin -->
+			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>com.vaadin.componentfactory</groupId>
-			<artifactId>popup</artifactId>
-			<version>24.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-spring-boot-starter</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId>
-			<version>6.4.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-dev</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>in.virit</groupId>
+			<artifactId>mopo</artifactId>
+			<version>0.0.6</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Devtools is cool, especially if you don't have JRebel -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<defaultGoal>jetty:run</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -130,6 +154,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 			<!--
              Take care of synchronizing java dependencies and imports in
              package.json and main.js files.
@@ -147,23 +172,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.version}</version>
-				<configuration>
-					<scan>2</scan>
-					<!-- Use test scope because the UI/test classes are in
-                        the test package. -->
-					<useTestScope>true</useTestScope>
-					<supportedPackagings>
-						<supportedPackaging>jar</supportedPackaging>
-					</supportedPackagings>
-					<systemProperties>
-						<vaadin.frontend.hotdeploy>true</vaadin.frontend.hotdeploy>
-					</systemProperties>
-				</configuration>
-			</plugin>
+
 			<!-- license plugin -->
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -177,7 +186,8 @@
 					<licenseSets>
 						<licenseSet>
 							<header>
-								com/mycila/maven/plugin/license/templates/MIT.txt</header>
+								com/mycila/maven/plugin/license/templates/MIT.txt
+							</header>
 							<includes>
 								<include>**/*.java</include>
 								<include>**/*.xml</include>
@@ -233,7 +243,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Nexus Staging Plugin -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -266,10 +276,11 @@
 						</includes>
 						<eclipse>
 							<file>
-								itm-java-codeformat/java_codestyle_formatter.xml</file>
+								itm-java-codeformat/java_codestyle_formatter.xml
+							</file>
 						</eclipse>
-						<trimTrailingWhitespace />
-						<endWithNewline />
+						<trimTrailingWhitespace/>
+						<endWithNewline/>
 					</java>
 				</configuration>
 				<executions>
@@ -334,10 +345,8 @@
 							</execution>
 						</executions>
 						<configuration>
+							<quiet>true</quiet>
 							<doclint>none</doclint>
-							<sourceFileIncludes>
-								<sourceFileInclude>**/*.java</sourceFileInclude>
-							</sourceFileIncludes>
 						</configuration>
 					</plugin>
 
@@ -346,11 +355,10 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>3.5.1</version>
 						<configuration>
-							<!-- Generated file that shouldn't be included in
-							add-ons -->
+							<!-- Generated file that shouldn't be included in add-ons -->
 							<excludes>
-								<exclude>
-									META-INF/VAADIN/config/flow-build-info.json</exclude>
+								<exclude>META-INF/VAADIN/config/flow-build-info.json</exclude>
+								<exclude>META-INF/VAADIN/webapp/**/*</exclude>
 							</excludes>
 						</configuration>
 					</plugin>
@@ -383,10 +391,11 @@
 							<autoPublish>true</autoPublish>
 							<tokenAuth>true</tokenAuth>
 							<deploymentName>
-								${project.groupId}:${project.version}</deploymentName>
+								${project.groupId}:${project.version}
+							</deploymentName>
 						</configuration>
 					</plugin>
-					
+
 					<!-- GPG plugin -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -415,44 +424,12 @@
 		</profile>
 
 		<profile>
-			<!-- Production mode is activated using -Pproduction -->
-			<id>production</id>
-			<properties>
-				<vaadin.productionMode>true</vaadin.productionMode>
-			</properties>
-
-			<dependencies>
-				<dependency>
-					<groupId>com.vaadin</groupId>
-					<artifactId>flow-server-production-mode</artifactId>
-				</dependency>
-			</dependencies>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.vaadin</groupId>
-						<artifactId>vaadin-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>build-frontend</goal>
-								</goals>
-								<phase>compile</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
 			<id>it</id>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.eclipse.jetty</groupId>
-						<artifactId>jetty-maven-plugin</artifactId>
+						<groupId>org.eclipse.jetty.ee11</groupId>
+						<artifactId>jetty-ee11-maven-plugin</artifactId>
 						<configuration>
 							<scan>0</scan>
 							<stopPort>8081</stopPort>
@@ -488,12 +465,11 @@
 						</configuration>
 					</plugin>
 
-					<!-- Runs the integration tests (*IT) after the server is
-					started -->
+					<!-- Runs the integration tests (*IT) after the server is started -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
-						<version>3.6.0</version>
+						<version>3.5.4</version>
 						<executions>
 							<execution>
 								<goals>

@@ -197,6 +197,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+				</configuration>
 			</plugin>
 
 			<!-- license plugin -->

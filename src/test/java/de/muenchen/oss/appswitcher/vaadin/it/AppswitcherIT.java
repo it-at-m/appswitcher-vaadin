@@ -66,10 +66,7 @@ public class AppswitcherIT {
 
     @BeforeEach
     public void setup() {
-        browser = playwright.chromium()
-                .launch(new BrowserType.LaunchOptions()
-                        .setHeadless(false)
-                        .setDevtools(true));
+        browser = playwright.chromium().launch();
 
         page = browser.newPage();
         page.setDefaultTimeout(10_000); // die faster if needed

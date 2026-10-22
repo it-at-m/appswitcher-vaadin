@@ -40,13 +40,7 @@ public class MyVaadinView extends Div {
 
 ## Development
 
-### Deployment
-
-Starting the test/demo server:
-
-```bash
-mvn jetty:run
-```
+Start the test/demo server by launching the `TestServer` class located in the `src/test/java`.
 
 This deploys demo at <http://localhost:8080>
 

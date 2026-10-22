@@ -22,9 +22,6 @@
  */
 package de.muenchen.oss.appswitcher.vaadin;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import com.vaadin.flow.component.ClickNotifier;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -36,13 +33,15 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverPosition;
 
-public class Appswitcher extends Div {
+public class Appswitcher<T extends Component & ClickNotifier<?>> extends Div {
 
     private static final long serialVersionUID = 1L;
 
-    private IFrame frame;
+    private final IFrame frame;
+    private final Popover popover;
+    private T component;
 
-    private <T extends Component & ClickNotifier<?>> Appswitcher(String uriWithTags, T component, String id,
+    private Appswitcher(String uriWithTags, T component, String id,
             String iframeId, String width, String height) {
         frame = new IFrame(uriWithTags);
         frame.setId(iframeId);
@@ -50,16 +49,30 @@ public class Appswitcher extends Div {
         frame.setWidth(width);
         frame.setHeight(height);
 
-        Popover popover = new Popover();
+        popover = new Popover();
         popover.setTarget(component);
         popover.setPosition(PopoverPosition.BOTTOM);
+
+        this.component = component;
 
         popover.add(frame);
         this.add(component, popover);
     }
 
-    public void setUrl(String url) {
+    public void setFrameUrl(String url) {
         frame.setSrc(url);
+    }
+
+    public String getFrameUrl() {
+        return frame.getSrc();
+    }
+
+    public Popover getPopover() {
+        return popover;
+    }
+
+    public T getComponent() {
+        return component;
     }
 
     public static <T extends Component & ClickNotifier<?>> Builder<T> builder(String baseUrl) {
@@ -70,7 +83,7 @@ public class Appswitcher extends Div {
         private String baseUrl;
         private String[] tags = new String[] { "global" };
         private T comp;
-        private Icon icon = VaadinIcon.GRID_BIG.create();
+        private Icon icon = VaadinIcon.GRID_SMALL.create();
         private String iframeId = "appswitcher-iframe";
         private String componentId = "appswitcher-component";
         private String width = "315px";
@@ -102,8 +115,17 @@ public class Appswitcher extends Div {
         }
 
         /**
+         * @param icon Icon used in the activator component, default {@link VaadinIcon#GRID_SMALL}
+         * @return the {@link Builder}
+         */
+        public Builder<T> icon(Icon icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        /**
          *
-         * @param component component which will trigger the popup containing the appswitcher-server
+         * @param component component which will trigger the popover containing the appswitcher-server
          *            iframe. Default: {@link Button} with
          *            {@link ButtonVariant#LUMO_TERTIARY} and Icon {@link VaadinIcon#GRID_SMALL}
          * @return the {@link Builder}
@@ -133,8 +155,8 @@ public class Appswitcher extends Div {
         }
 
         /**
-         * Sets the size of the iframe. Should be strings that are understood by browsers (e.g.
-         * '100%', '1.5em', '200px').
+         * Sets the size of the iframe. Should be strings that are understood by browsers (e.g. '100%',
+         * '1.5em', '200px').
          *
          * @param width (default: "315px")
          * @param height (default: "300px")
@@ -150,14 +172,14 @@ public class Appswitcher extends Div {
          * @return a {@link Appswitcher} component
          */
         @SuppressWarnings("unchecked")
-        public Appswitcher build() {
+        public Appswitcher<T> build() {
             if (this.comp == null) {
                 Button b = new Button(this.icon);
                 b.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
                 b.setId(this.componentId);
                 this.comp = (T) b;
             }
-            return new Appswitcher(getUrlWithTags(this.baseUrl, this.tags), this.comp, this.componentId,
+            return new Appswitcher<>(getUrlWithTags(this.baseUrl, this.tags), this.comp, this.componentId,
                     this.iframeId, this.width, this.height);
         }
 
@@ -165,7 +187,7 @@ public class Appswitcher extends Div {
             if (tags == null || tags.length == 0) {
                 return baseUrl;
             } else {
-                return baseUrl + "?tags=" + Arrays.asList(tags).stream().collect(Collectors.joining(","));
+                return baseUrl + "?tags=" + String.join(",", tags);
             }
         }
     }

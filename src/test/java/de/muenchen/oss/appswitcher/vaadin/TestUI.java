@@ -22,6 +22,7 @@
  */
 package de.muenchen.oss.appswitcher.vaadin;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -32,30 +33,31 @@ import com.vaadin.flow.router.Route;
  * Test View for our {@link Appswitcher} add-on class. This class and others in the test folder will
  * not be included in the final JAR.
  */
-@Route
+@Route("testui")
 public class TestUI extends VerticalLayout {
 
     private static final long serialVersionUID = 1L;
 
-    private TextField baseUrlTextField;
-    private Appswitcher appswitcher;
+    private final TextField baseUrlTextField;
+    private Appswitcher<? extends Component> appswitcher;
 
     public TestUI() {
         baseUrlTextField = new TextField();
-        baseUrlTextField.setLabel("Base URL");
-        baseUrlTextField.setValue("https://rbs-appswitcher-coding.muenchen.de");
+        baseUrlTextField.setTestId("appswitcher-url");
+        baseUrlTextField.setLabel("Appswitcher URL");
+        baseUrlTextField.setValue("https://example.com");
         baseUrlTextField.addValueChangeListener(e -> {
-            appswitcher.setUrl(e.getValue());
+            appswitcher.setFrameUrl(e.getValue());
         });
 
-        add(new H1("AppSwitcher"));
+        add(new H1("AppSwitcher TestUI"));
         add(baseUrlTextField);
-        appswitcher = Appswitcher.builder("https://rbs-appswitcher-coding.muenchen.de")
-                .tags("global", "rbs-kita")
+        appswitcher = Appswitcher.builder(baseUrlTextField.getValue())
+                .tags("global", "finance")
+                .componentId("appswitcher-activator")
                 .build();
 
         add(appswitcher);
 
-        add(new H1("AppSwitcher Footer"));
     }
 }
